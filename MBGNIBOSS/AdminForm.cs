@@ -69,8 +69,42 @@ namespace MBGNIBOSS
             }
         }
 
+        // ================= UPDATE =================
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                conn.Open();
 
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE Pengambilan SET " +
+                "Nama=@nama, Kelas=@kelas, Alergi=@alergi, Status=@status " +
+                "WHERE NIS=@nis", conn);
 
+                cmd.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
+                cmd.Parameters.AddWithValue("@nama", txtNama.Text.Trim());
+                cmd.Parameters.AddWithValue("@kelas", txtKelas.Text.Trim());
+                cmd.Parameters.AddWithValue("@alergi", txtAlergi.Text.Trim());
+                cmd.Parameters.AddWithValue("@status", txtStatus.Text.Trim());
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil diupdate");
+
+                LoadData();
+                ClearForm();
+                LoadStatistik();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
       
+
+
     }
 }
