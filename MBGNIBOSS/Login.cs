@@ -66,7 +66,35 @@ namespace MBGNIBOSS
                 MessageBox.Show(ex.Message);
             }
         }
+        private void btnKembali_Click(object sender, EventArgs e)
+        {
+
+
+            try
+            {
+                DialogResult hasil = MessageBox.Show(
+                    "Kamu mau keluar?",
+                    "Konfirmasi",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (hasil == DialogResult.Yes)
+                {
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR: " + ex.Message);
+            }
+
+
+        }
+
+
       
+
+    }
 }
 
 
