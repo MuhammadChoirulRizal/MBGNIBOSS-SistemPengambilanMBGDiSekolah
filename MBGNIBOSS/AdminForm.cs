@@ -40,6 +40,37 @@ namespace MBGNIBOSS
                 MessageBox.Show(ex.Message);
             }
         }
+        void LoadStatistik()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                txtTotalData.Text = new SqlCommand(
+                "SELECT COUNT(*) FROM Pengambilan", conn)
+                .ExecuteScalar().ToString();
+
+                txtSudah.Text = new SqlCommand(
+                "SELECT COUNT(*) FROM Pengambilan WHERE Status='Sudah Diambil'", conn)
+                .ExecuteScalar().ToString();
+
+                txtBelum.Text = new SqlCommand(
+                "SELECT COUNT(*) FROM Pengambilan WHERE Status='Belum Diambil'", conn)
+                .ExecuteScalar().ToString();
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+
       
     }
 }
