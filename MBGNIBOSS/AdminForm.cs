@@ -103,8 +103,46 @@ namespace MBGNIBOSS
                 MessageBox.Show(ex.Message);
             }
         }
-      
 
 
+        // ================= HAPUS =================
+        private void btnHapus_Click(object sender, EventArgs e)
+        {
+            DialogResult jawab = MessageBox.Show(
+                "Yakin ingin menghapus data?",
+                "Konfirmasi",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
+            try
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "DELETE FROM Pengambilan WHERE NIS=@nis", conn);
+
+                cmd.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil dihapus");
+
+                LoadData();
+                ClearForm();
+                LoadStatistik();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= CARI =================
+       
     }
 }
