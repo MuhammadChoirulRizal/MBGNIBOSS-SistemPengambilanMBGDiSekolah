@@ -143,6 +143,97 @@ namespace MBGNIBOSS
         }
 
         // ================= CARI =================
-       
+        private void btnCari_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                conn.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(
+                "SELECT * FROM Pengambilan WHERE NIS LIKE @nis", conn);
+
+                da.SelectCommand.Parameters.AddWithValue(
+                "@nis", "%" + txtCariNIS.Text.Trim() + "%");
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+
+                conn.Close();
+
+                // kalau data ditemukan
+                if (dt.Rows.Count > 0)
+                {
+                    txtNIS.Text = dt.Rows[0]["NIS"].ToString();
+                    txtNama.Text = dt.Rows[0]["Nama"].ToString();
+                    txtKelas.Text = dt.Rows[0]["Kelas"].ToString();
+                    txtAlergi.Text = dt.Rows[0]["Alergi"].ToString();
+                    txtStatus.Text = dt.Rows[0]["Status"].ToString();
+                }
+                else
+                {
+                    MessageBox.Show("Data tidak ditemukan");
+                    ClearForm();
+                }
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= RESET STATUS =================
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            DialogResult jawab = MessageBox.Show(
+"Yakin ingin Mereset data?",
+"Konfirmasi",
+MessageBoxButtons.YesNo,
+MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
+            try
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE Pengambilan SET Status='Belum Diambil'", conn);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Reset berhasil");
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= LOAD BUTTON =================
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT * FROM Pengambilan", conn);
+
+            SqlDataReader rd = cmd.ExecuteReader();
+
+            DataTable dt = new DataTable();
+            dt.Load(rd);
+
+            dataGridView1.DataSource = dt;
+
+            conn.Close();
+        }
+
+     
     }
 }
