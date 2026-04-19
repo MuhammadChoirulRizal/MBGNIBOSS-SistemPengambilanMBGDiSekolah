@@ -21,7 +21,52 @@ namespace MBGNIBOSS
             InitializeComponent();
         }
 
-   
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "SELECT RoleUser FROM Users WHERE Username=@u AND Pass=@p", conn);
+
+                cmd.Parameters.AddWithValue("@u", txtUsername.Text.Trim());
+                cmd.Parameters.AddWithValue("@p", txtPassword.Text.Trim());
+
+                SqlDataReader rd = cmd.ExecuteReader();
+
+                if (rd.Read())
+                {
+                    string role = rd["RoleUser"].ToString().Trim();
+
+                    MessageBox.Show("Login berhasil sebagai: " + role);
+
+                    rd.Close();
+                    conn.Close();
+
+                    this.Hide();
+
+                    if (role == "Admin")
+                        new AdminForm().Show();
+                    else if (role == "Petugas")
+                        new PetugasForm().Show();
+                    else
+                        new SiswaForm().Show();
+                }
+                else
+                {
+                    rd.Close();
+                    conn.Close();
+                    MessageBox.Show("Login gagal! Username / Password salah");
+                }
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+      
 }
 
 
