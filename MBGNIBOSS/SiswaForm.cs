@@ -40,6 +40,38 @@ namespace MBGNIBOSS
             }
         }
 
-      
+        private void LoadGrid()
+        {
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(
+                    "SELECT S.NIS, S.Nama, S.Kelas, S.Alergi, P.StatusAmbil " +
+                    "FROM Siswa S LEFT JOIN Pengambilan P ON S.NIS = P.NIS " +
+                    "WHERE S.NIS = @nis", conn);
+
+                da.SelectCommand.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Data tidak ditemukan");
+                    dataGridView1.DataSource = null;
+                }
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR: " + ex.Message);
+            }
+        }
+
     }
 }
