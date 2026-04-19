@@ -73,5 +73,19 @@ namespace MBGNIBOSS
             }
         }
 
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Login f = new Login();
+                f.Show();
+
+                this.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
