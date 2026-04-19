@@ -12,7 +12,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace MBGNIBOSS
 {
- 
+    public partial class Login : Form
+    {
+        SqlConnection conn = new SqlConnection(
+         @"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;Integrated Security=True;");
+        public Login()
+        {
+            InitializeComponent();
+        }
+
+   
 }
 
 
