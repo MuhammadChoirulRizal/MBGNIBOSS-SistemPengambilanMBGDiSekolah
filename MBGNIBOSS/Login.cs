@@ -91,8 +91,20 @@ namespace MBGNIBOSS
 
         }
 
+        private void Login_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                conn.Open();
+                lblStatus.Text = "Database Connected";
+                conn.Close();
+            }
+            catch
+            {
+                lblStatus.Text = "Database Failed";
+            }
+        }
 
-      
 
     }
 }
