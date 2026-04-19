@@ -16,6 +16,30 @@ namespace MBGNIBOSS
         }
 
         // ================= LOAD DATA =================
-     
+        void LoadData()
+        {
+            try
+            {
+                conn.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(
+                "SELECT ID,NIS,Nama,Kelas,Alergi,Tanggal,Jam,Status FROM Pengambilan", conn);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+
+                dataGridView1.Columns["ID"].Visible = false;
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+      
     }
 }
