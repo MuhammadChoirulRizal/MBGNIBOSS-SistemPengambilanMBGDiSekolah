@@ -143,8 +143,76 @@ MessageBoxIcon.Question);
             }
         }
 
+        void ClearForm()
+        {
+            txtCari.Clear();
+            txtNama.Clear();
+            txtKelas.Clear();
+            txtAlergi.Clear();
+            txtStatus.Clear();
+            txtTanggal.Clear();
+            txtJam.Clear();
 
-       
+            txtCari.Focus();
+        }
+
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            Login f = new Login();
+            f.Show();
+            this.Hide();
+        }
+
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                txtCari.Text = dataGridView1.Rows[e.RowIndex].Cells["NIS"].Value.ToString();
+                txtNama.Text = dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
+                txtKelas.Text = dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
+                txtAlergi.Text = dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
+                txtTanggal.Text = dataGridView1.Rows[e.RowIndex].Cells["Tanggal"].Value.ToString();
+                txtJam.Text = dataGridView1.Rows[e.RowIndex].Cells["Jam"].Value.ToString();
+                txtStatus.Text = dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
+            }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            DialogResult jawab = MessageBox.Show(
+"Yakin ingin Mereset data?",
+"Konfirmasi",
+MessageBoxButtons.YesNo,
+MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
+
+            try
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE Pengambilan SET Status='Belum Diambil'", conn);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Reset berhasil");
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+
+
+        }
+
     }
     
 }
