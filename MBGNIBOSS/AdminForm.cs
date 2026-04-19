@@ -234,6 +234,20 @@ MessageBoxIcon.Question);
             conn.Close();
         }
 
-     
+        // ================= KLIK GRID =================
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                txtNIS.Text = dataGridView1.Rows[e.RowIndex].Cells["NIS"].Value.ToString();
+                txtNama.Text = dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
+                txtKelas.Text = dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
+                txtAlergi.Text = dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
+                txtStatus.Text = dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
+            }
+        }
+
+        // ================= LOGOUT =================
+       
     }
 }
