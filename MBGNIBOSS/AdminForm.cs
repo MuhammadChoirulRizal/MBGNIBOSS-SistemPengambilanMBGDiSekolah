@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace MBGNIBOSS
@@ -20,10 +21,13 @@ namespace MBGNIBOSS
         {
             try
             {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
                 SqlDataAdapter da = new SqlDataAdapter(
-                "SELECT ID,NIS,Nama,Kelas,Alergi,Tanggal,Jam,Status FROM Pengambilan", conn);
+                "SELECT ID,NIS,Nama,Kelas,Alergi,Jam,Status FROM Pengambilan", conn);
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -40,6 +44,82 @@ namespace MBGNIBOSS
                 MessageBox.Show(ex.Message);
             }
         }
+
+        // ================= LOAD JADWAL =================
+        void LoadJadwal()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(
+                "SELECT * FROM JadwalPengambilan",
+                conn);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridView2.DataSource = dt;
+
+                // sembunyikan ID
+                dataGridView2.Columns["ID"].Visible = false;
+
+                dataGridView2.AutoSizeColumnsMode =
+                DataGridViewAutoSizeColumnsMode.Fill;
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= LOAD STOK =================
+        void LoadStokKelas()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                // ================= KELAS 7 =================
+                SqlCommand cmd7 = new SqlCommand(
+                "SELECT Jumlah FROM StokKelas WHERE Kelas='7'", conn);
+
+                lblKelas7.Text = "Stok 7 : " +
+                cmd7.ExecuteScalar().ToString();
+
+                // ================= KELAS 8 =================
+                SqlCommand cmd8 = new SqlCommand(
+                "SELECT Jumlah FROM StokKelas WHERE Kelas='8'", conn);
+
+                lblKelas8.Text = "Stok 8 : " +
+                cmd8.ExecuteScalar().ToString();
+
+                // ================= KELAS 9 =================
+                SqlCommand cmd9 = new SqlCommand(
+                "SELECT Jumlah FROM StokKelas WHERE Kelas='9'", conn);
+
+                lblKelas9.Text = "Stok 9 : " +
+                cmd9.ExecuteScalar().ToString();
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= LOAD STATISTIK =================
         void LoadStatistik()
         {
             try
@@ -49,15 +129,15 @@ namespace MBGNIBOSS
 
                 conn.Open();
 
-                txtTotalData.Text = new SqlCommand(
+                lblTotalData.Text = new SqlCommand(
                 "SELECT COUNT(*) FROM Pengambilan", conn)
                 .ExecuteScalar().ToString();
 
-                txtSudah.Text = new SqlCommand(
+                lblSudah.Text = new SqlCommand(
                 "SELECT COUNT(*) FROM Pengambilan WHERE Status='Sudah Diambil'", conn)
                 .ExecuteScalar().ToString();
 
-                txtBelum.Text = new SqlCommand(
+                lblBelum.Text = new SqlCommand(
                 "SELECT COUNT(*) FROM Pengambilan WHERE Status='Belum Diambil'", conn)
                 .ExecuteScalar().ToString();
 
@@ -65,232 +145,60 @@ namespace MBGNIBOSS
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        // ================= UPDATE =================
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                conn.Open();
-
-                SqlCommand cmd = new SqlCommand(
-                "UPDATE Pengambilan SET " +
-                "Nama=@nama, Kelas=@kelas, Alergi=@alergi, Status=@status " +
-                "WHERE NIS=@nis", conn);
-
-                cmd.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
-                cmd.Parameters.AddWithValue("@nama", txtNama.Text.Trim());
-                cmd.Parameters.AddWithValue("@kelas", txtKelas.Text.Trim());
-                cmd.Parameters.AddWithValue("@alergi", txtAlergi.Text.Trim());
-                cmd.Parameters.AddWithValue("@status", txtStatus.Text.Trim());
-
-                cmd.ExecuteNonQuery();
-
-                conn.Close();
-
-                MessageBox.Show("Data berhasil diupdate");
-
-                LoadData();
-                ClearForm();
-                LoadStatistik();
-            }
-            catch (Exception ex)
-            {
                 conn.Close();
                 MessageBox.Show(ex.Message);
             }
-        }
-
-
-        // ================= HAPUS =================
-        private void btnHapus_Click(object sender, EventArgs e)
-        {
-            DialogResult jawab = MessageBox.Show(
-                "Yakin ingin menghapus data?",
-                "Konfirmasi",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (jawab == DialogResult.No)
-                return;
-            try
-            {
-                conn.Open();
-
-                SqlCommand cmd = new SqlCommand(
-                "DELETE FROM Pengambilan WHERE NIS=@nis", conn);
-
-                cmd.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
-
-                cmd.ExecuteNonQuery();
-
-                conn.Close();
-
-                MessageBox.Show("Data berhasil dihapus");
-
-                LoadData();
-                ClearForm();
-                LoadStatistik();
-            }
-            catch (Exception ex)
-            {
-                conn.Close();
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        // ================= CARI =================
-        private void btnCari_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                conn.Open();
-
-                SqlDataAdapter da = new SqlDataAdapter(
-                "SELECT * FROM Pengambilan WHERE NIS LIKE @nis", conn);
-
-                da.SelectCommand.Parameters.AddWithValue(
-                "@nis", "%" + txtCariNIS.Text.Trim() + "%");
-
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                dataGridView1.DataSource = dt;
-
-                conn.Close();
-
-                // kalau data ditemukan
-                if (dt.Rows.Count > 0)
-                {
-                    txtNIS.Text = dt.Rows[0]["NIS"].ToString();
-                    txtNama.Text = dt.Rows[0]["Nama"].ToString();
-                    txtKelas.Text = dt.Rows[0]["Kelas"].ToString();
-                    txtAlergi.Text = dt.Rows[0]["Alergi"].ToString();
-                    txtStatus.Text = dt.Rows[0]["Status"].ToString();
-                }
-                else
-                {
-                    MessageBox.Show("Data tidak ditemukan");
-                    ClearForm();
-                }
-            }
-            catch (Exception ex)
-            {
-                conn.Close();
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        // ================= RESET STATUS =================
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            DialogResult jawab = MessageBox.Show(
-"Yakin ingin Mereset data?",
-"Konfirmasi",
-MessageBoxButtons.YesNo,
-MessageBoxIcon.Question);
-
-            if (jawab == DialogResult.No)
-                return;
-            try
-            {
-                conn.Open();
-
-                SqlCommand cmd = new SqlCommand(
-                "UPDATE Pengambilan SET Status='Belum Diambil'", conn);
-
-                cmd.ExecuteNonQuery();
-
-                conn.Close();
-
-                MessageBox.Show("Reset berhasil");
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                conn.Close();
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        // ================= LOAD BUTTON =================
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            conn.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            "SELECT * FROM Pengambilan", conn);
-
-            SqlDataReader rd = cmd.ExecuteReader();
-
-            DataTable dt = new DataTable();
-            dt.Load(rd);
-
-            dataGridView1.DataSource = dt;
-
-            conn.Close();
-        }
-
-        // ================= KLIK GRID =================
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                txtNIS.Text = dataGridView1.Rows[e.RowIndex].Cells["NIS"].Value.ToString();
-                txtNama.Text = dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
-                txtKelas.Text = dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
-                txtAlergi.Text = dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
-                txtStatus.Text = dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
-            }
-        }
-
-        // ================= LOGOUT =================
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            Login f = new Login();
-            f.Show();
-            this.Hide();
         }
 
         // ================= FORM LOAD =================
         private void AdminForm_Load(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = null;
+            LoadData();
+            LoadJadwal();
             LoadStatistik();
+            LoadStokKelas();
+
+            dataGridView1.AutoSizeColumnsMode =
+            DataGridViewAutoSizeColumnsMode.Fill;
+
+            dataGridView2.AutoSizeColumnsMode =
+            DataGridViewAutoSizeColumnsMode.Fill;
+            cmbKelasStok.Items.Add("7");
+            cmbKelasStok.Items.Add("8");
+            cmbKelasStok.Items.Add("9");
+            cmbKelas.Items.Add("7");
+            cmbKelas.Items.Add("8");
+            cmbKelas.Items.Add("9");
+            cmbKelasJadwal.Items.Add("7");
+            cmbKelasJadwal.Items.Add("8");
+            cmbKelasJadwal.Items.Add("9");
         }
 
-
+        // ================= CLEAR FORM =================
         void ClearForm()
         {
             txtNIS.Clear();
             txtNama.Clear();
-            txtKelas.Clear();
+
+            cmbKelas.SelectedIndex = -1;
+
             txtAlergi.Clear();
-            txtTotalData.Clear();
-            txtSudah.Clear();
-            txtBelum.Clear();
             txtStatus.Clear();
 
             txtNIS.Focus();
         }
 
-        private void btnTambah_Click_1(object sender, EventArgs e)
+        // ================= TAMBAH DATA =================
+        private void btnTambah_Click(object sender, EventArgs e)
         {
-            // ================= TAMBAH DATA =================
-
-
             DialogResult jawab = MessageBox.Show(
-       "Yakin ingin Menambah data?",
-       "Konfirmasi",
-       MessageBoxButtons.YesNo,
-       MessageBoxIcon.Question);
+            "Apakah ingin menambah data?",
+            "Konfirmasi",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
 
             if (jawab == DialogResult.No)
                 return;
-
 
             try
             {
@@ -301,13 +209,15 @@ MessageBoxIcon.Question);
                     return;
                 }
 
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
-                // CEK NIS SUDAH ADA / BELUM
                 SqlCommand cek = new SqlCommand(
                 "SELECT COUNT(*) FROM Pengambilan WHERE NIS=@nis", conn);
 
-                cek.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
+                cek.Parameters.AddWithValue("@nis", txtNIS.Text);
 
                 int jumlah = (int)cek.ExecuteScalar();
 
@@ -323,22 +233,507 @@ MessageBoxIcon.Question);
                 "(NIS,Nama,Kelas,Alergi,Tanggal,Jam,Status) " +
                 "VALUES (@nis,@nama,@kelas,@alergi,@tgl,@jam,@status)", conn);
 
-                cmd.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
-                cmd.Parameters.AddWithValue("@nama", txtNama.Text.Trim());
-                cmd.Parameters.AddWithValue("@kelas", txtKelas.Text.Trim());
-                cmd.Parameters.AddWithValue("@alergi", txtAlergi.Text.Trim());
-                cmd.Parameters.AddWithValue("@tgl", DateTime.Now.ToString("yyyy-MM-dd"));
-                cmd.Parameters.AddWithValue("@jam", DateTime.Now.ToString("HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@status", "Belum Diambil");
+                cmd.Parameters.AddWithValue("@nis", txtNIS.Text);
+                cmd.Parameters.AddWithValue("@nama", txtNama.Text);
+                cmd.Parameters.AddWithValue("@kelas", cmbKelas.Text);
+                cmd.Parameters.AddWithValue("@alergi", txtAlergi.Text);
+
+                cmd.Parameters.AddWithValue("@tgl",
+                DateTime.Now.ToString("yyyy-MM-dd"));
+
+                cmd.Parameters.AddWithValue("@jam",
+                DateTime.Now.ToString("HH:mm:ss"));
+
+                cmd.Parameters.AddWithValue("@status",
+                "Belum Diambil");
 
                 cmd.ExecuteNonQuery();
 
                 conn.Close();
-                MessageBox.Show("Data berhasil ditambah");
+
+                MessageBox.Show("Data berhasil ditambah!");
 
                 LoadData();
-                ClearForm();
                 LoadStatistik();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= UPDATE =================
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtStatus.Text.Trim() == "")
+                {
+                    MessageBox.Show("Status wajib diisi!");
+                    return;
+                }
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE Pengambilan SET " +
+                "Nama=@nama, Kelas=@kelas, " +
+                "Alergi=@alergi, Status=@status " +
+                "WHERE NIS=@nis", conn);
+
+                cmd.Parameters.AddWithValue("@nis", txtNIS.Text);
+                cmd.Parameters.AddWithValue("@nama", txtNama.Text);
+                cmd.Parameters.AddWithValue("@kelas", cmbKelas.Text);
+                cmd.Parameters.AddWithValue("@alergi", txtAlergi.Text);
+                cmd.Parameters.AddWithValue("@status", txtStatus.Text);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil diupdate!");
+
+                LoadData();
+                LoadStatistik();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= HAPUS =================
+        private void btnHapus_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "DELETE FROM Pengambilan WHERE NIS=@nis", conn);
+
+                cmd.Parameters.AddWithValue("@nis", txtNIS.Text);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil dihapus!");
+
+                LoadData();
+                LoadStatistik();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= CARI =================
+        private void btnCari_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(
+                "SELECT * FROM Pengambilan WHERE NIS=@nis", conn);
+
+                da.SelectCommand.Parameters.AddWithValue(
+                "@nis", txtCariNIS.Text);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+
+                conn.Close();
+
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("Data tidak ditemukan!");
+                }
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= LOAD BUTTON =================
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= GRID CLICK =================
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                txtNIS.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["NIS"].Value.ToString();
+
+                txtNama.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
+
+                cmbKelas.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
+
+                txtAlergi.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
+
+                txtStatus.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
+            }
+        }
+
+        // ================= RESET =================
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult jawab = MessageBox.Show(
+                "Reset seluruh data harian?",
+                "Konfirmasi",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+                if (jawab == DialogResult.No)
+                    return;
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                // ================= RESET STATUS SISWA =================
+                SqlCommand resetStatus = new SqlCommand(
+                "UPDATE Pengambilan " +
+                "SET Status='Belum Diambil'", conn);
+
+                resetStatus.ExecuteNonQuery();
+
+                // ================= RESET TOTAL STOK =================
+                SqlCommand resetTotal = new SqlCommand(
+                "UPDATE StokMBG SET Jumlah=300 WHERE ID=1", conn);
+
+                resetTotal.ExecuteNonQuery();
+
+                // ================= RESET STOK KELAS =================
+                SqlCommand resetKelas = new SqlCommand(
+                "UPDATE StokKelas SET Jumlah=100", conn);
+
+                resetKelas.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Reset harian berhasil!");
+
+                // ================= REFRESH =================
+                LoadData();
+                LoadStatistik();
+                
+                LoadStokKelas();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+        // ================= LOGOUT =================
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            Login f = new Login();
+            f.Show();
+            this.Hide();
+        }
+
+        // ================= VALIDASI NAMA =================
+        private void txtNama_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != (char)8)
+            {
+                MessageBox.Show("Nama hanya boleh huruf!");
+                e.Handled = true;
+            }
+        }
+
+        // ================= VALIDASI NIS =================
+        private void txtNIS_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) &&
+                e.KeyChar != (char)8)
+            {
+                MessageBox.Show("NIS hanya boleh angka!");
+                e.Handled = true;
+            }
+        }
+
+        private void btnTambahJadwal_Click(
+  object sender,
+  EventArgs e)
+        {
+            try
+            {
+                if (cmbKelasJadwal.Text == "")
+                {
+                    MessageBox.Show(
+                    "Pilih kelas terlebih dahulu!");
+                    return;
+                }
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "INSERT INTO JadwalPengambilan " +
+                "(Kelas,Tanggal,JamMulai,JamSelesai) " +
+                "VALUES (@kelas,@tanggal,@mulai,@selesai)",
+                conn);
+
+                cmd.Parameters.AddWithValue(
+                "@kelas",
+                cmbKelasJadwal.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@tanggal",
+                dtTanggal.Value.Date);
+
+                cmd.Parameters.AddWithValue(
+                "@mulai",
+                dtJamMulai.Value.ToString("HH:mm"));
+
+                cmd.Parameters.AddWithValue(
+                "@selesai",
+                dtJamSelesai.Value.ToString("HH:mm"));
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show(
+                "Jadwal berhasil ditambah!");
+
+                LoadJadwal();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnUpdateJadwal_Click(
+ object sender,
+ EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE JadwalPengambilan SET " +
+                "Tanggal=@tanggal, " +
+                "JamMulai=@mulai, " +
+                "JamSelesai=@selesai " +
+                "WHERE Kelas=@kelas",
+                conn);
+
+                cmd.Parameters.AddWithValue(
+                "@kelas",
+                cmbKelasJadwal.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@tanggal",
+                dtTanggal.Value.Date);
+
+                cmd.Parameters.AddWithValue(
+                "@mulai",
+                dtJamMulai.Value.ToString("HH:mm"));
+
+                cmd.Parameters.AddWithValue(
+                "@selesai",
+                dtJamSelesai.Value.ToString("HH:mm"));
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show(
+                "Jadwal berhasil diupdate!");
+
+                LoadJadwal();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void btnHapusJadwal_Click(
+ object sender,
+ EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                "DELETE FROM JadwalPengambilan " +
+                "WHERE Kelas=@kelas " +
+                "AND Tanggal=@tanggal",
+                conn);
+
+                cmd.Parameters.AddWithValue(
+                "@kelas",
+                cmbKelasJadwal.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@tanggal",
+                dtTanggal.Value.Date);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show(
+                "Jadwal berhasil dihapus!");
+
+                LoadJadwal();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView2_CellClick(
+ object sender,
+ DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                cmbKelasJadwal.Text =
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["Kelas"].Value.ToString();
+
+                dtTanggal.Value =
+                Convert.ToDateTime(
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["Tanggal"].Value);
+
+                dtJamMulai.Text =
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["JamMulai"].Value.ToString();
+
+                dtJamSelesai.Text =
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["JamSelesai"].Value.ToString();
+            }
+        }
+
+
+        private void btnUpdateStok_Click(
+  object sender,
+  EventArgs e)
+        {
+            try
+            {
+                if (cmbKelasStok.Text == "" ||
+                    txtTambahStok.Text == "")
+                {
+                    MessageBox.Show(
+                    "Lengkapi data terlebih dahulu!");
+                    return;
+                }
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                // update stok kelas
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE StokKelas " +
+                "SET Jumlah=@jumlah " +
+                "WHERE Kelas=@kelas",
+                conn);
+
+                cmd.Parameters.AddWithValue(
+                "@jumlah",
+                Convert.ToInt32(txtTambahStok.Text));
+
+                cmd.Parameters.AddWithValue(
+                "@kelas",
+                cmbKelasStok.Text);
+
+                cmd.ExecuteNonQuery();
+
+                // hitung ulang total stok
+                SqlCommand total =
+                new SqlCommand(
+                "SELECT SUM(Jumlah) FROM StokKelas",
+                conn);
+
+                int totalStok =
+                Convert.ToInt32(total.ExecuteScalar());
+
+                SqlCommand updateTotal =
+                new SqlCommand(
+                "UPDATE StokMBG " +
+                "SET Jumlah=@jumlah " +
+                "WHERE ID=1",
+                conn);
+
+                updateTotal.Parameters.AddWithValue(
+                "@jumlah",
+                totalStok);
+
+                updateTotal.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show(
+                "Stok berhasil diupdate!");
+
+                LoadStokKelas();
             }
             catch (Exception ex)
             {
