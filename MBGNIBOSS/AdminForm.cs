@@ -181,6 +181,226 @@ namespace MBGNIBOSS
         }
 
         // ================= CLEAR FORM =================
-      
+        void ClearForm()
+        {
+            txtNIS.Clear();
+            txtNama.Clear();
+
+            cmbKelas.SelectedIndex = -1;
+
+            txtAlergi.Clear();
+            txtStatus.Clear();
+
+            txtNIS.Focus();
+        }
+
+        // ================= TAMBAH DATA =================
+        private void btnTambah_Click(object sender, EventArgs e)
+        {
+            DialogResult jawab = MessageBox.Show(
+            "Apakah ingin menambah data?",
+            "Konfirmasi",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
+
+            try
+            {
+                if (txtNIS.Text.Trim() == "" ||
+                    txtNama.Text.Trim() == "")
+                {
+                    MessageBox.Show("Data belum lengkap!");
+                    return;
+                }
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+"spInsertPengambilan", conn);
+
+                cmd.CommandType =
+                CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue(
+                "@NIS",
+                txtNIS.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Nama",
+                txtNama.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Kelas",
+                cmbKelas.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Alergi",
+                txtAlergi.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Status",
+                "Belum Diambil");
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil ditambah!");
+
+                LoadData();
+                LoadStatistik();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= UPDATE =================
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtStatus.Text.Trim() == "")
+                {
+                    MessageBox.Show("Status wajib diisi!");
+                    return;
+                }
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+"spUpdatePengambilan",
+conn);
+
+                cmd.CommandType =
+                CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue(
+                "@NIS",
+                txtNIS.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Nama",
+                txtNama.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Kelas",
+                cmbKelas.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Alergi",
+                txtAlergi.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Status",
+                txtStatus.Text);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil diupdate!");
+
+                LoadData();
+                LoadStatistik();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= HAPUS =================
+        private void btnHapus_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+"spDeletePengambilan",
+conn);
+
+                cmd.CommandType =
+                CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue(
+                "@NIS",
+                txtNIS.Text);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Data berhasil dihapus!");
+
+                LoadData();
+                LoadStatistik();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= CARI =================
+        private void btnCari_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+                SqlDataAdapter da =
+new SqlDataAdapter(
+"spSearchPengambilan",
+conn);
+
+                da.SelectCommand.CommandType =
+                CommandType.StoredProcedure;
+
+                da.SelectCommand.Parameters.AddWithValue(
+                "@NIS",
+                txtCariNIS.Text);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+
+                conn.Close();
+
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("Data tidak ditemukan!");
+                }
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= LOAD BUTTON =================
+       
     }
 }
