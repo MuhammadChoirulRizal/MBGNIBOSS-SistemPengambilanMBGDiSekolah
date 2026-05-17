@@ -401,6 +401,127 @@ conn);
         }
 
         // ================= LOAD BUTTON =================
-       
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        // ================= GRID CLICK =================
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                txtNIS.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["NIS"].Value.ToString();
+
+                txtNama.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
+
+                cmbKelas.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
+
+                txtAlergi.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
+
+                txtStatus.Text =
+                dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
+            }
+        }
+
+        // ================= RESET =================
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult jawab = MessageBox.Show(
+                "Reset seluruh data harian?",
+                "Konfirmasi",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+                if (jawab == DialogResult.No)
+                    return;
+
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                // ================= RESET STATUS SISWA =================
+                SqlCommand resetStatus = new SqlCommand(
+                "UPDATE Pengambilan " +
+                "SET Status='Belum Diambil'", conn);
+
+                resetStatus.ExecuteNonQuery();
+
+                // ================= RESET TOTAL STOK =================
+                SqlCommand resetTotal = new SqlCommand(
+                "UPDATE StokMBG SET Jumlah=300 WHERE ID=1", conn);
+
+                resetTotal.ExecuteNonQuery();
+
+                // ================= RESET STOK KELAS =================
+                SqlCommand resetKelas = new SqlCommand(
+                "UPDATE StokKelas SET Jumlah=100", conn);
+
+                resetKelas.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show("Reset harian berhasil!");
+
+                // ================= REFRESH =================
+                LoadData();
+                LoadStatistik();
+
+                LoadStokKelas();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+        // ================= LOGOUT =================
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            Login f = new Login();
+            f.Show();
+            this.Hide();
+        }
+
+        // ================= VALIDASI NAMA =================
+        private void txtNama_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != (char)8)
+            {
+                MessageBox.Show("Nama hanya boleh huruf!");
+                e.Handled = true;
+            }
+        }
+
+        // ================= VALIDASI NIS =================
+        private void txtNIS_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) &&
+                e.KeyChar != (char)8)
+            {
+                MessageBox.Show("NIS hanya boleh angka!");
+                e.Handled = true;
+            }
+        }
+
+        
+
     }
 }
