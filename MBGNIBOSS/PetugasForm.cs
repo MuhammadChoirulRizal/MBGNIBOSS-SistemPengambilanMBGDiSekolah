@@ -305,8 +305,91 @@ EventArgs e)
             }
         }
 
-       
 
+        void ClearForm()
+        {
+            txtCariNIS.Clear();
+            txtNama.Clear();
+            txtKelas.Clear();
+            txtAlergi.Clear();
+            txtStatus.Clear();
+
+
+            txtCariNIS.Focus();
+        }
+
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult jawab = MessageBox.Show(
+            "apakah Anda ingin Keluar dari Form Ini ?",
+              "Konfirmasi",
+             MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
+            Login f = new Login();
+            f.Show();
+            this.Hide();
+        }
+
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                txtCariNIS.Text = dataGridView1.Rows[e.RowIndex].Cells["CariNIS"].Value.ToString();
+                txtNama.Text = dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
+                txtKelas.Text = dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
+                txtAlergi.Text = dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
+
+                txtStatus.Text = dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
+            }
+        }
+
+        private void PetugasForm_Load(object sender, EventArgs e)
+        {
+
+            LoadStokKelas();
+            LoadData();
+        }
+
+        void LoadStokKelas()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd7 = new SqlCommand(
+                "SELECT Jumlah FROM vwStokKelas WHERE Kelas='7'", conn);
+
+                lblStok7.Text =
+                "Stok 7 : " + cmd7.ExecuteScalar().ToString();
+
+                SqlCommand cmd8 = new SqlCommand(
+                "SELECT Jumlah FROM vwStokKelas WHERE Kelas='8'", conn);
+
+                lblStok8.Text =
+                "Stok 8 : " + cmd8.ExecuteScalar().ToString();
+
+                SqlCommand cmd9 = new SqlCommand(
+                "SELECT Jumlah FROM vwStokKelas WHERE Kelas='9'", conn);
+
+                lblStok9.Text =
+                "Stok 9 : " + cmd9.ExecuteScalar().ToString();
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
 
     }
     
