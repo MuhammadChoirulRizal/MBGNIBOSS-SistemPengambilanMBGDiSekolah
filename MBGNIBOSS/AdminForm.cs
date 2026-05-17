@@ -625,8 +625,48 @@ EventArgs e)
                 MessageBox.Show(ex.Message);
             }
         }
-       
+        private void btnHapusJadwal_Click(
+object sender,
+EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
 
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+ "spDeleteJadwal",
+ conn);
+
+                cmd.CommandType =
+                CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue(
+                "@Kelas",
+                cmbKelasJadwal.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Tanggal",
+                dtTanggal.Value.Date);
+
+                cmd.ExecuteNonQuery();
+                conn.Close();
+
+                MessageBox.Show(
+                "Jadwal berhasil dihapus!");
+
+                LoadJadwal();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+       
 
     }
 }
