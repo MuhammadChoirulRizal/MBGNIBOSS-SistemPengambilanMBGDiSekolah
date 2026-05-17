@@ -689,14 +689,78 @@ DataGridViewCellEventArgs e)
                 .Cells["JamSelesai"].Value.ToString();
             }
         }
+        private void btnUpdateStok_Click(
+ object sender,
+ EventArgs e)
+        {
+            try
+            {
+                if (cmbKelasStok.Text == "" ||
+                    txtTambahStok.Text == "")
+                {
+                    MessageBox.Show(
+                    "Lengkapi data terlebih dahulu!");
+                    return;
+                }
 
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
 
-       
+                conn.Open();
+
+                // update stok kelas
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE StokKelas " +
+                "SET Jumlah=@jumlah " +
+                "WHERE Kelas=@kelas",
+                conn);
+
+                cmd.Parameters.AddWithValue(
+                "@jumlah",
+                Convert.ToInt32(txtTambahStok.Text));
+
+                cmd.Parameters.AddWithValue(
+                "@kelas",
+                cmbKelasStok.Text);
+
+                cmd.ExecuteNonQuery();
+
+                // hitung ulang total stok
+                SqlCommand total =
+                new SqlCommand(
+                "SELECT SUM(Jumlah) FROM StokKelas",
+                conn);
+
+                int totalStok =
+                Convert.ToInt32(total.ExecuteScalar());
+
+                SqlCommand updateTotal =
+                new SqlCommand(
+                "UPDATE StokMBG " +
+                "SET Jumlah=@jumlah " +
+                "WHERE ID=1",
+                conn);
+
+                updateTotal.Parameters.AddWithValue(
+                "@jumlah",
+                totalStok);
+
+                updateTotal.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show(
+                "Stok berhasil diupdate!");
+
+                LoadStokKelas();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+
         }
-
-
-
-
 
     }
 }
