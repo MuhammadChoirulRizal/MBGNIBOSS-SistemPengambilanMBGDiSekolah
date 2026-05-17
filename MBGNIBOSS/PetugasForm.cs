@@ -47,7 +47,49 @@ namespace MBGNIBOSS
             }
         }
 
-       
+        private void btnCari_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(
+                "SELECT NIS,Nama,Kelas,Alergi,Status FROM vwPengambilan WHERE NIS=@nis", conn);
+
+                da.SelectCommand.Parameters.AddWithValue(
+                "@nis", txtCariNIS.Text);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+
+                if (dt.Rows.Count > 0)
+                {
+                    txtCariNIS.Text = dt.Rows[0]["NIS"].ToString();
+                    txtNama.Text = dt.Rows[0]["Nama"].ToString();
+                    txtKelas.Text = dt.Rows[0]["Kelas"].ToString();
+                    txtStatus.Text = dt.Rows[0]["Status"].ToString();
+                }
+                else
+                {
+                    MessageBox.Show("Data tidak ditemukan!");
+                }
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+      
     }
     
 }
