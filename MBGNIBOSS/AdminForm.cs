@@ -576,7 +576,57 @@ conn);
                 MessageBox.Show(ex.Message);
             }
         }
+        private void btnUpdateJadwal_Click(
+object sender,
+EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
 
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+ "spUpdateJadwal",
+ conn);
+
+                cmd.CommandType =
+                CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue(
+                "@Kelas",
+                cmbKelasJadwal.Text);
+
+                cmd.Parameters.AddWithValue(
+                "@Tanggal",
+                dtTanggal.Value.Date);
+
+                cmd.Parameters.AddWithValue(
+                "@JamMulai",
+                dtJamMulai.Value.ToString("HH:mm"));
+
+                cmd.Parameters.AddWithValue(
+                "@JamSelesai",
+                dtJamSelesai.Value.ToString("HH:mm"));
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                MessageBox.Show(
+                "Jadwal berhasil diupdate!");
+
+                LoadJadwal();
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
        
+
+
     }
 }
