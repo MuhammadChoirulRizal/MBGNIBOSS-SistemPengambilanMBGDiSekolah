@@ -72,73 +72,9 @@ namespace MBGNIBOSS
             }
         }
 
-        private void LoadGrid()
-        {
-            try
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
+     
 
-                conn.Open();
-
-                SqlDataAdapter da =
-                new SqlDataAdapter(
-                "SELECT * FROM vwPengambilan " +
-                "WHERE NIS=@nis", conn);
-
-                da.SelectCommand.Parameters.AddWithValue(
-                "@nis",
-                txtNIS.Text.Trim());
-
-                DataTable dt = new DataTable();
-
-                da.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    dataGridView1.DataSource = dt;
-                }
-                else
-                {
-                    MessageBox.Show(
-                    "Data tidak ditemukan");
-
-                    dataGridView1.DataSource = null;
-                }
-
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                conn.Close();
-
-                MessageBox.Show(
-                "ERROR: " + ex.Message);
-            }
-        }
-
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            DialogResult jawab = MessageBox.Show(
-            "Apakah Anda Ingin Keluar ?",
-            "Konfirmasi",
-             MessageBoxButtons.YesNo,
-             MessageBoxIcon.Question);
-
-            if (jawab == DialogResult.No)
-                return;
-            try
-            {
-                Login f = new Login();
-                f.Show();
-
-                this.Hide();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+      
 
     }
 }
