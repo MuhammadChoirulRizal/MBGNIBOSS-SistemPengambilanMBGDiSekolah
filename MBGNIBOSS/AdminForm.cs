@@ -665,8 +665,38 @@ EventArgs e)
                 MessageBox.Show(ex.Message);
             }
         }
+        private void dataGridView2_CellClick(
+object sender,
+DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                cmbKelasJadwal.Text =
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["Kelas"].Value.ToString();
+
+                dtTanggal.Value =
+                Convert.ToDateTime(
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["Tanggal"].Value);
+
+                dtJamMulai.Text =
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["JamMulai"].Value.ToString();
+
+                dtJamSelesai.Text =
+                dataGridView2.Rows[e.RowIndex]
+                .Cells["JamSelesai"].Value.ToString();
+            }
+        }
+
 
        
+        }
+
+
+
+
 
     }
 }
