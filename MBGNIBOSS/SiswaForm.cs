@@ -16,20 +16,52 @@ namespace MBGNIBOSS
         }
         private void btnCek_Click(object sender, EventArgs e)
         {
+            DialogResult jawab = MessageBox.Show(
+            "Aoakah Anda Ingin Mencari?",
+            "Konfirmasi",
+             MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
             try
             {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
-                SqlDataAdapter da = new SqlDataAdapter(
-                "SELECT NIS,Nama,Kelas,Alergi,Status,Tanggal,Jam " +
-                "FROM Pengambilan WHERE NIS=@nis", conn);
+                SqlDataAdapter da =
+                new SqlDataAdapter(
+                "SELECT NIS,Nama,Kelas,Alergi,Status " +
+                "FROM vwPengambilan " +
+                "WHERE NIS=@nis", conn);
 
-                da.SelectCommand.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
+                da.SelectCommand.Parameters.AddWithValue(
+                "@nis",
+                txtNIS.Text.Trim());
 
-                DataTable dt = new DataTable();
+                DataTable dt =
+                new DataTable();
+
                 da.Fill(dt);
 
+                // tampil ke gridview
                 dataGridView1.DataSource = dt;
+
+                dataGridView1.AutoSizeColumnsMode =
+                DataGridViewAutoSizeColumnsMode.Fill;
+
+                // VALIDASI JIKA NIS TIDAK ADA
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show(
+                    "NIS tidak ditemukan!");
+
+                    dataGridView1.DataSource = null;
+
+                    txtNIS.Focus();
+                }
 
                 conn.Close();
             }
@@ -44,15 +76,22 @@ namespace MBGNIBOSS
         {
             try
             {
-                conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(
-                    "SELECT S.NIS, S.Nama, S.Kelas, S.Alergi, P.StatusAmbil " +
-                    "FROM Siswa S LEFT JOIN Pengambilan P ON S.NIS = P.NIS " +
-                    "WHERE S.NIS = @nis", conn);
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
 
-                da.SelectCommand.Parameters.AddWithValue("@nis", txtNIS.Text.Trim());
+                conn.Open();
+
+                SqlDataAdapter da =
+                new SqlDataAdapter(
+                "SELECT * FROM vwPengambilan " +
+                "WHERE NIS=@nis", conn);
+
+                da.SelectCommand.Parameters.AddWithValue(
+                "@nis",
+                txtNIS.Text.Trim());
 
                 DataTable dt = new DataTable();
+
                 da.Fill(dt);
 
                 if (dt.Rows.Count > 0)
@@ -61,7 +100,9 @@ namespace MBGNIBOSS
                 }
                 else
                 {
-                    MessageBox.Show("Data tidak ditemukan");
+                    MessageBox.Show(
+                    "Data tidak ditemukan");
+
                     dataGridView1.DataSource = null;
                 }
 
@@ -69,12 +110,23 @@ namespace MBGNIBOSS
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ERROR: " + ex.Message);
+                conn.Close();
+
+                MessageBox.Show(
+                "ERROR: " + ex.Message);
             }
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
+            DialogResult jawab = MessageBox.Show(
+            "Apakah Anda Ingin Keluar ?",
+            "Konfirmasi",
+             MessageBoxButtons.YesNo,
+             MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
             try
             {
                 Login f = new Login();
@@ -87,5 +139,6 @@ namespace MBGNIBOSS
                 MessageBox.Show(ex.Message);
             }
         }
+
     }
 }

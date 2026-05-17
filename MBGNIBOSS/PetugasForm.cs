@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MBGNIBOSS
 {
@@ -15,8 +17,9 @@ namespace MBGNIBOSS
         {
             InitializeComponent();
         }
+     
 
-      
+
         void LoadData()
         {
             try
@@ -24,7 +27,8 @@ namespace MBGNIBOSS
                 conn.Open();
 
                 SqlDataAdapter da = new SqlDataAdapter(
-                "SELECT NIS,Nama,Kelas,Alergi,Tanggal,Jam,Status FROM Pengambilan", conn);
+ "SELECT NIS,Nama,Kelas,Alergi,Status FROM vwPengambilan",
+ conn);
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -32,6 +36,7 @@ namespace MBGNIBOSS
                 dataGridView1.DataSource = dt;
                 dataGridView1.AutoSizeColumnsMode =
                 DataGridViewAutoSizeColumnsMode.Fill;
+                
 
                 conn.Close();
             }
@@ -46,47 +51,34 @@ namespace MBGNIBOSS
         {
             try
             {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                "SELECT * FROM Pengambilan WHERE NIS=@nis", conn);
+                SqlDataAdapter da = new SqlDataAdapter(
+                "SELECT NIS,Nama,Kelas,Alergi,Status FROM vwPengambilan WHERE NIS=@nis", conn);
 
-                cmd.Parameters.AddWithValue("@nis", txtCari.Text.Trim());
+                da.SelectCommand.Parameters.AddWithValue(
+                "@nis", txtCariNIS.Text);
 
-                SqlDataReader rd = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
-                if (rd.Read())
+                dataGridView1.DataSource = dt;
+
+                if (dt.Rows.Count > 0)
                 {
-                    txtNama.Text = rd["Nama"].ToString();
-                    txtKelas.Text = rd["Kelas"].ToString();
-                    txtAlergi.Text = rd["Alergi"].ToString();
-                    txtStatus.Text = rd["Status"].ToString();
-                    txtTanggal.Text = rd["Tanggal"].ToString();
-                    txtJam.Text = rd["Jam"].ToString();
-
-                    // VALIDASI SUDAH AMBIL
-                    if (txtStatus.Text == "Sudah Diambil")
-                    {
-                        MessageBox.Show("Jatah Sudah Diambil!");
-                        btnProses.Enabled = false;
-                    }
-                    else
-                    {
-                        btnProses.Enabled = true;
-                    }
-
-                    // VALIDASI ALERGI
-                    if (txtAlergi.Text != "")
-                    {
-                        MessageBox.Show("PERHATIAN! SISWA MEMILIKI ALERGI");
-                    }
+                    txtCariNIS.Text = dt.Rows[0]["NIS"].ToString();
+                    txtNama.Text = dt.Rows[0]["Nama"].ToString();
+                    txtKelas.Text = dt.Rows[0]["Kelas"].ToString();
+                    txtStatus.Text = dt.Rows[0]["Status"].ToString();
                 }
                 else
                 {
-                    MessageBox.Show("NIS tidak ditemukan");
+                    MessageBox.Show("Data tidak ditemukan!");
                 }
 
-                rd.Close();
                 conn.Close();
             }
             catch (Exception ex)
@@ -97,43 +89,215 @@ namespace MBGNIBOSS
         }
 
 
-        private void btnProses_Click(object sender, EventArgs e)
+        private void btnProses_Click(
+  object sender,
+  EventArgs e)
         {
-            DialogResult jawab = MessageBox.Show(
-"Yakin ingin Memproses data?",
-"Konfirmasi",
-MessageBoxButtons.YesNo,
-MessageBoxIcon.Question);
-
-            if (jawab == DialogResult.No)
-                return;
             try
             {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                "UPDATE Pengambilan SET " +
-                "Status='Sudah Diambil'," +
-                "Tanggal=@tgl," +
-                "Jam=@jam " +
-                "WHERE NIS=@nis", conn);
+                // ================= CEK DATA SISWA =================
+                SqlCommand cek = new SqlCommand(
+                "SELECT * FROM vwPengambilan " +
+                "WHERE NIS=@nis",
+                conn);
 
-                cmd.Parameters.AddWithValue("@tgl",
-                DateTime.Now.ToString("yyyy-MM-dd"));
+                cek.Parameters.AddWithValue(
+                "@nis",
+                txtCariNIS.Text);
 
-                cmd.Parameters.AddWithValue("@jam",
-                DateTime.Now.ToString("HH:mm:ss"));
+                SqlDataReader rd =
+                cek.ExecuteReader();
 
-                cmd.Parameters.AddWithValue("@nis",
-                txtCari.Text.Trim());
+                if (!rd.Read())
+                {
+                    rd.Close();
+                    conn.Close();
 
-                cmd.ExecuteNonQuery();
+                    MessageBox.Show(
+                    "Data siswa tidak ditemukan!");
+
+                    return;
+                }
+
+                // ================= AMBIL DATA SISWA =================
+                string kelas =
+                rd["Kelas"].ToString();
+
+                string status =
+                rd["Status"].ToString();
+
+                string alergi =
+                rd["Alergi"].ToString();
+
+                rd.Close();
+
+                // ================= NOTIF ALERGI =================
+                if (!string.IsNullOrWhiteSpace(alergi))
+                {
+                    MessageBox.Show(
+                    "Perhatian!\n" +
+                    "Siswa memiliki alergi: " +
+                    alergi,
+                    "Peringatan Alergi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                }
+
+                // ================= SUDAH AMBIL =================
+                if (status == "Sudah Diambil")
+                {
+                    conn.Close();
+
+                    MessageBox.Show(
+                    "Siswa sudah mengambil MBG!");
+
+                    return;
+                }
+
+                // ================= CEK JADWAL =================
+                SqlCommand jadwal =
+ new SqlCommand(
+ "SELECT Tanggal, JamMulai, JamSelesai " +
+ "FROM vwJadwal " +
+ "WHERE Kelas=@kelas " +
+ "AND Tanggal=@tanggal",
+ conn);
+
+                jadwal.Parameters.AddWithValue(
+                "@kelas",
+                kelas);
+
+                jadwal.Parameters.AddWithValue(
+                "@tanggal",
+                DateTime.Now.Date);
+
+                SqlDataReader jd =
+                jadwal.ExecuteReader();
+
+                if (!jd.Read())
+                {
+                    jd.Close();
+                    conn.Close();
+
+                    MessageBox.Show(
+                    "Belum ada jadwal pengambilan hari ini!");
+
+                    return;
+                }
+
+                TimeSpan mulai =
+                TimeSpan.Parse(
+                jd["JamMulai"].ToString());
+
+                TimeSpan selesai =
+                TimeSpan.Parse(
+                jd["JamSelesai"].ToString());
+
+                jd.Close();
+
+                // ================= VALIDASI JAM =================
+                TimeSpan sekarang =
+                DateTime.Now.TimeOfDay;
+
+                if (sekarang < mulai ||
+                    sekarang > selesai)
+                {
+                    conn.Close();
+
+                    MessageBox.Show(
+                    "Belum waktunya pengambilan!");
+
+                    return;
+                }
+
+                // ================= CEK STOK KELAS =================
+                SqlCommand stokCmd =
+                new SqlCommand(
+                "SELECT Jumlah " +
+                "FROM vwStokKelas " +
+                "WHERE Kelas=@kelas",
+                conn);
+
+                stokCmd.Parameters.AddWithValue(
+                "@kelas",
+                kelas);
+
+                int stok =
+                Convert.ToInt32(
+                stokCmd.ExecuteScalar());
+
+                if (stok <= 0)
+                {
+                    conn.Close();
+
+                    MessageBox.Show(
+                    "Stok kelas habis!");
+
+                    return;
+                }
+
+                // ================= UPDATE STATUS =================
+                SqlCommand update =
+                new SqlCommand(
+                "UPDATE Pengambilan " +
+                "SET Status='Sudah Diambil' " +
+                "WHERE NIS=@nis",
+                conn);
+
+                update.Parameters.AddWithValue(
+                "@nis",
+                txtCariNIS.Text);
+
+                update.ExecuteNonQuery();
+
+                // ================= KURANGI STOK KELAS =================
+                SqlCommand kurangKelas =
+                new SqlCommand(
+                "UPDATE StokKelas " +
+                "SET Jumlah = Jumlah - 1 " +
+                "WHERE Kelas=@kelas",
+                conn);
+
+                kurangKelas.Parameters.AddWithValue(
+                "@kelas",
+                kelas);
+
+                kurangKelas.ExecuteNonQuery();
+
+                // ================= UPDATE TOTAL STOK =================
+                SqlCommand total =
+                new SqlCommand(
+                "SELECT SUM(Jumlah) " +
+                "FROM StokKelas",
+                conn);
+
+                int totalStok =
+                Convert.ToInt32(
+                total.ExecuteScalar());
+
+                SqlCommand updateTotal =
+   new SqlCommand(
+   "UPDATE StokMBG " +
+   "SET Jumlah=@jumlah",
+   conn);
+                updateTotal.Parameters.AddWithValue(
+                "@jumlah",
+                totalStok);
+
+                updateTotal.ExecuteNonQuery();
 
                 conn.Close();
 
-                MessageBox.Show("Pengambilan berhasil!");
+                MessageBox.Show(
+                "Pengambilan berhasil!");
 
                 LoadData();
+                LoadStokKelas();
                 ClearForm();
             }
             catch (Exception ex)
@@ -145,20 +309,27 @@ MessageBoxIcon.Question);
 
         void ClearForm()
         {
-            txtCari.Clear();
+            txtCariNIS.Clear();
             txtNama.Clear();
             txtKelas.Clear();
             txtAlergi.Clear();
             txtStatus.Clear();
-            txtTanggal.Clear();
-            txtJam.Clear();
+          
 
-            txtCari.Focus();
+            txtCariNIS.Focus();
         }
 
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
+            DialogResult jawab = MessageBox.Show(
+            "apakah Anda ingin Keluar dari Form Ini ?",
+              "Konfirmasi",
+             MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (jawab == DialogResult.No)
+                return;
             Login f = new Login();
             f.Show();
             this.Hide();
@@ -169,50 +340,57 @@ MessageBoxIcon.Question);
         {
             if (e.RowIndex >= 0)
             {
-                txtCari.Text = dataGridView1.Rows[e.RowIndex].Cells["NIS"].Value.ToString();
+                txtCariNIS.Text = dataGridView1.Rows[e.RowIndex].Cells["CariNIS"].Value.ToString();
                 txtNama.Text = dataGridView1.Rows[e.RowIndex].Cells["Nama"].Value.ToString();
                 txtKelas.Text = dataGridView1.Rows[e.RowIndex].Cells["Kelas"].Value.ToString();
                 txtAlergi.Text = dataGridView1.Rows[e.RowIndex].Cells["Alergi"].Value.ToString();
-                txtTanggal.Text = dataGridView1.Rows[e.RowIndex].Cells["Tanggal"].Value.ToString();
-                txtJam.Text = dataGridView1.Rows[e.RowIndex].Cells["Jam"].Value.ToString();
+
                 txtStatus.Text = dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
             }
         }
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void PetugasForm_Load(object sender, EventArgs e)
         {
-            DialogResult jawab = MessageBox.Show(
-"Yakin ingin Mereset data?",
-"Konfirmasi",
-MessageBoxButtons.YesNo,
-MessageBoxIcon.Question);
+           
+           LoadStokKelas();
+            LoadData();
+        }
 
-            if (jawab == DialogResult.No)
-                return;
-
+        void LoadStokKelas()
+        {
             try
             {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                "UPDATE Pengambilan SET Status='Belum Diambil'", conn);
+                SqlCommand cmd7 = new SqlCommand(
+                "SELECT Jumlah FROM vwStokKelas WHERE Kelas='7'", conn);
 
-                cmd.ExecuteNonQuery();
+                lblStok7.Text =
+                "Stok 7 : " + cmd7.ExecuteScalar().ToString();
+
+                SqlCommand cmd8 = new SqlCommand(
+                "SELECT Jumlah FROM vwStokKelas WHERE Kelas='8'", conn);
+
+                lblStok8.Text =
+                "Stok 8 : " + cmd8.ExecuteScalar().ToString();
+
+                SqlCommand cmd9 = new SqlCommand(
+                "SELECT Jumlah FROM vwStokKelas WHERE Kelas='9'", conn);
+
+                lblStok9.Text =
+                "Stok 9 : " + cmd9.ExecuteScalar().ToString();
 
                 conn.Close();
-
-                MessageBox.Show("Reset berhasil");
-                LoadData();
             }
             catch (Exception ex)
             {
                 conn.Close();
                 MessageBox.Show(ex.Message);
             }
-
-
         }
-
     }
     
 }

@@ -32,7 +32,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnProses = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.txtCari = new System.Windows.Forms.TextBox();
+            this.txtCariNIS = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -41,14 +41,14 @@
             this.txtNama = new System.Windows.Forms.TextBox();
             this.txtKelas = new System.Windows.Forms.TextBox();
             this.txtAlergi = new System.Windows.Forms.TextBox();
-            this.labelTanggal = new System.Windows.Forms.Label();
-            this.labelJam = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.txtStatus = new System.Windows.Forms.TextBox();
-            this.txtJam = new System.Windows.Forms.TextBox();
-            this.txtTanggal = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblStok9 = new System.Windows.Forms.Label();
+            this.lblStok8 = new System.Windows.Forms.Label();
+            this.lblStok7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -96,20 +96,20 @@
             this.lblStatus.TabIndex = 3;
             this.lblStatus.Text = "STATUS ";
             // 
-            // txtCari
+            // txtCariNIS
             // 
-            this.txtCari.BackColor = System.Drawing.Color.White;
-            this.txtCari.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCari.Location = new System.Drawing.Point(185, 86);
-            this.txtCari.Name = "txtCari";
-            this.txtCari.Size = new System.Drawing.Size(220, 30);
-            this.txtCari.TabIndex = 4;
+            this.txtCariNIS.BackColor = System.Drawing.Color.White;
+            this.txtCariNIS.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCariNIS.Location = new System.Drawing.Point(185, 86);
+            this.txtCariNIS.Name = "txtCariNIS";
+            this.txtCariNIS.Size = new System.Drawing.Size(220, 30);
+            this.txtCariNIS.TabIndex = 4;
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.button1.Location = new System.Drawing.Point(635, 415);
+            this.button1.Location = new System.Drawing.Point(653, 556);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(120, 57);
             this.button1.TabIndex = 5;
@@ -190,28 +190,6 @@
             this.txtAlergi.Size = new System.Drawing.Size(220, 30);
             this.txtAlergi.TabIndex = 13;
             // 
-            // labelTanggal
-            // 
-            this.labelTanggal.AutoSize = true;
-            this.labelTanggal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTanggal.ForeColor = System.Drawing.Color.Navy;
-            this.labelTanggal.Location = new System.Drawing.Point(29, 335);
-            this.labelTanggal.Name = "labelTanggal";
-            this.labelTanggal.Size = new System.Drawing.Size(53, 23);
-            this.labelTanggal.TabIndex = 14;
-            this.labelTanggal.Text = "DATE";
-            // 
-            // labelJam
-            // 
-            this.labelJam.AutoSize = true;
-            this.labelJam.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelJam.ForeColor = System.Drawing.Color.Navy;
-            this.labelJam.Location = new System.Drawing.Point(28, 293);
-            this.labelJam.Name = "labelJam";
-            this.labelJam.Size = new System.Drawing.Size(50, 23);
-            this.labelJam.TabIndex = 15;
-            this.labelJam.Text = "TIME";
-            // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -219,7 +197,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(539, 97);
+            this.dataGridView1.Size = new System.Drawing.Size(539, 172);
             this.dataGridView1.TabIndex = 16;
             // 
             // txtStatus
@@ -231,35 +209,44 @@
             this.txtStatus.Size = new System.Drawing.Size(220, 30);
             this.txtStatus.TabIndex = 17;
             // 
-            // txtJam
+            // groupBox1
             // 
-            this.txtJam.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtJam.ForeColor = System.Drawing.Color.Pink;
-            this.txtJam.Location = new System.Drawing.Point(185, 293);
-            this.txtJam.Name = "txtJam";
-            this.txtJam.Size = new System.Drawing.Size(220, 30);
-            this.txtJam.TabIndex = 18;
+            this.groupBox1.Controls.Add(this.lblStok9);
+            this.groupBox1.Controls.Add(this.lblStok8);
+            this.groupBox1.Controls.Add(this.lblStok7);
+            this.groupBox1.Location = new System.Drawing.Point(509, 188);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(239, 154);
+            this.groupBox1.TabIndex = 21;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Jumlah Stok";
             // 
-            // txtTanggal
+            // lblStok9
             // 
-            this.txtTanggal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTanggal.ForeColor = System.Drawing.Color.Pink;
-            this.txtTanggal.Location = new System.Drawing.Point(185, 335);
-            this.txtTanggal.Name = "txtTanggal";
-            this.txtTanggal.Size = new System.Drawing.Size(220, 30);
-            this.txtTanggal.TabIndex = 19;
+            this.lblStok9.AutoSize = true;
+            this.lblStok9.Location = new System.Drawing.Point(22, 80);
+            this.lblStok9.Name = "lblStok9";
+            this.lblStok9.Size = new System.Drawing.Size(81, 16);
+            this.lblStok9.TabIndex = 2;
+            this.lblStok9.Text = "Stok Kelas 9";
             // 
-            // button2
+            // lblStok8
             // 
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.Navy;
-            this.button2.Location = new System.Drawing.Point(522, 149);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 43);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "RESET";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.btnReset_Click);
+            this.lblStok8.AutoSize = true;
+            this.lblStok8.Location = new System.Drawing.Point(22, 54);
+            this.lblStok8.Name = "lblStok8";
+            this.lblStok8.Size = new System.Drawing.Size(81, 16);
+            this.lblStok8.TabIndex = 1;
+            this.lblStok8.Text = "Stok Kelas 8";
+            // 
+            // lblStok7
+            // 
+            this.lblStok7.AutoSize = true;
+            this.lblStok7.Location = new System.Drawing.Point(22, 28);
+            this.lblStok7.Name = "lblStok7";
+            this.lblStok7.Size = new System.Drawing.Size(81, 16);
+            this.lblStok7.TabIndex = 0;
+            this.lblStok7.Text = "Stok Kelas 7";
             // 
             // PetugasForm
             // 
@@ -267,13 +254,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(800, 616);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.txtTanggal);
-            this.Controls.Add(this.txtJam);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.labelJam);
-            this.Controls.Add(this.labelTanggal);
             this.Controls.Add(this.txtAlergi);
             this.Controls.Add(this.txtKelas);
             this.Controls.Add(this.txtNama);
@@ -282,14 +265,17 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.txtCari);
+            this.Controls.Add(this.txtCariNIS);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnProses);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "PetugasForm";
             this.Text = "PetugasForm";
+            this.Load += new System.EventHandler(this.PetugasForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -301,7 +287,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnProses;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.TextBox txtCari;
+        private System.Windows.Forms.TextBox txtCariNIS;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label3;
@@ -310,12 +296,11 @@
         private System.Windows.Forms.TextBox txtNama;
         private System.Windows.Forms.TextBox txtKelas;
         private System.Windows.Forms.TextBox txtAlergi;
-        private System.Windows.Forms.Label labelTanggal;
-        private System.Windows.Forms.Label labelJam;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TextBox txtStatus;
-        private System.Windows.Forms.TextBox txtJam;
-        private System.Windows.Forms.TextBox txtTanggal;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lblStok9;
+        private System.Windows.Forms.Label lblStok8;
+        private System.Windows.Forms.Label lblStok7;
     }
 }
