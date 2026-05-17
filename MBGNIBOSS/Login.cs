@@ -71,8 +71,83 @@ namespace MBGNIBOSS
         }
 
         // ================= LOGIN =================
-      
 
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            if (txtPassword.Text.Trim() == "")
+            {
+                MessageBox.Show(
+                "Password wajib diisi!");
+                return;
+            }
+
+            try
+            {
+                if (conn.State ==
+                    System.Data.ConnectionState.Open)
+                    conn.Close();
+
+                conn.Open();
+
+                SqlCommand cmd =
+                new SqlCommand(
+                "SELECT * FROM Users " +
+                "WHERE RoleUser=@role " +
+                "AND Pass=@pass", conn);
+
+                cmd.Parameters.AddWithValue(
+                "@role", role);
+
+                cmd.Parameters.AddWithValue(
+                "@pass",
+                txtPassword.Text);
+                /*SqlCommand cmd =
+                new SqlCommand(
+                "SELECT * FROM Users " +
+                "WHERE RoleUser='" + role +
+                "' AND Pass='" + txtPassword.Text + "'",
+                conn);*/
+                SqlDataReader rd =
+                cmd.ExecuteReader();
+
+                if (rd.Read())
+                {
+                    rd.Close();
+                    conn.Close();
+
+                    if (role == "Admin")
+                    {
+                        AdminForm f =
+                        new AdminForm();
+
+                        f.Show();
+                        this.Hide();
+                    }
+                    else if
+                    (role == "Petugas")
+                    {
+                        PetugasForm f =
+                        new PetugasForm();
+
+                        f.Show();
+                        this.Hide();
+                    }
+                }
+                else
+                {
+                    rd.Close();
+                    conn.Close();
+
+                    MessageBox.Show(
+                    "Password salah!");
+                }
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
 
     }
 }
