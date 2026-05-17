@@ -72,9 +72,30 @@ namespace MBGNIBOSS
             }
         }
 
-     
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult jawab = MessageBox.Show(
+            "Apakah Anda Ingin Keluar ?",
+            "Konfirmasi",
+             MessageBoxButtons.YesNo,
+             MessageBoxIcon.Question);
 
-      
+            if (jawab == DialogResult.No)
+                return;
+            try
+            {
+                Login f = new Login();
+                f.Show();
+
+                this.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
 
     }
 }
