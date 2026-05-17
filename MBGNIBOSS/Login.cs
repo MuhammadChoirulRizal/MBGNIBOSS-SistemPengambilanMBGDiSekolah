@@ -28,9 +28,51 @@ namespace MBGNIBOSS
         }
 
         // ================= ADMIN =================
+
+        private void btnAdmin_Click(object sender, EventArgs e)
+        {
+            role = "Admin";
+
+            lblLogin.Visible = true;
+            txtPassword.Visible = true;
+            btnLogin.Visible = true;
+
+            lblLogin.Text =
+            "Masukkan Password Admin";
+
+            txtPassword.Clear();
+            txtPassword.Focus();
+        }
+
+        // ================= PETUGAS =================
+        private void btnPetugas_Click(object sender, EventArgs e)
+        {
+            role = "Petugas";
+
+            lblLogin.Visible = true;
+            txtPassword.Visible = true;
+            btnLogin.Visible = true;
+
+            lblLogin.Text =
+            "Masukkan Password Petugas";
+
+            txtPassword.Clear();
+            txtPassword.Focus();
+        }
+
+        // ================= SISWA =================
+        private void btnSiswa_Click(object sender, EventArgs e)
+        {
+            SiswaForm f =
+            new SiswaForm();
+
+            f.Show();
+            this.Hide();
+        }
+
+        // ================= LOGIN =================
       
 
-        
-      
+
     }
 }
