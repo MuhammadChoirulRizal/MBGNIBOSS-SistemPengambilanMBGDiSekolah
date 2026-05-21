@@ -89,7 +89,7 @@ namespace MBGNIBOSS
 
                 conn.Open();
 
-                SqlCommand cmd =
+                /*SqlCommand cmd =
                 new SqlCommand(
                 "SELECT * FROM Users " +
                 "WHERE RoleUser=@role " +
@@ -100,13 +100,14 @@ namespace MBGNIBOSS
 
                 cmd.Parameters.AddWithValue(
                 "@pass",
-                txtPassword.Text);
-                /*SqlCommand cmd =
+                txtPassword.Text);*/
+                SqlCommand cmd =
                 new SqlCommand(
                 "SELECT * FROM Users " +
                 "WHERE RoleUser='" + role +
                 "' AND Pass='" + txtPassword.Text + "'",
-                conn);*/
+                conn);
+
                 SqlDataReader rd =
                 cmd.ExecuteReader();
 
