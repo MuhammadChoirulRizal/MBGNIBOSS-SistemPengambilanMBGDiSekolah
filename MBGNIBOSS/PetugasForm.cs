@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MBGNIBOSS
@@ -11,8 +12,7 @@ namespace MBGNIBOSS
     public partial class PetugasForm : Form
     {
         SqlConnection conn = new SqlConnection(
-        @"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;Integrated Security=True");
-
+       @"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;User ID=sa;Password=123;TrustServerCertificate=True;");
         public PetugasForm()
         {
             InitializeComponent();
@@ -253,41 +253,6 @@ EventArgs e)
 
                 update.ExecuteNonQuery();
 
-                // ================= KURANGI STOK KELAS =================
-                SqlCommand kurangKelas =
-                new SqlCommand(
-                "UPDATE StokKelas " +
-                "SET Jumlah = Jumlah - 1 " +
-                "WHERE Kelas=@kelas",
-                conn);
-
-                kurangKelas.Parameters.AddWithValue(
-                "@kelas",
-                kelas);
-
-                kurangKelas.ExecuteNonQuery();
-
-                // ================= UPDATE TOTAL STOK =================
-                SqlCommand total =
-                new SqlCommand(
-                "SELECT SUM(Jumlah) " +
-                "FROM StokKelas",
-                conn);
-
-                int totalStok =
-                Convert.ToInt32(
-                total.ExecuteScalar());
-
-                SqlCommand updateTotal =
-   new SqlCommand(
-   "UPDATE StokMBG " +
-   "SET Jumlah=@jumlah",
-   conn);
-                updateTotal.Parameters.AddWithValue(
-                "@jumlah",
-                totalStok);
-
-                updateTotal.ExecuteNonQuery();
 
                 conn.Close();
 

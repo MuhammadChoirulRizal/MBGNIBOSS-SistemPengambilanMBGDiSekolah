@@ -1,19 +1,11 @@
 CREATE DATABASE DB_MBG;
 USE DB_MBG;
-
-CREATE TABLE Users (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    Username VARCHAR(30),
-    Pass VARCHAR(30),
-    RoleUser VARCHAR(20)
+CREATE TABLE Admin (
+    id_admin INT PRIMARY KEY IDENTITY(1,1),
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nama_admin VARCHAR(100) NOT NULL
 );
-
-INSERT INTO Users (Username, Pass, RoleUser)
-VALUES 
-('admin', '123', 'Admin'),
-('petugas', '123', 'Petugas'),
-('siswa', '123', 'Siswa');
-
 CREATE TABLE Siswa (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     NIS VARCHAR(20) NOT NULL UNIQUE,
@@ -29,6 +21,12 @@ CREATE TABLE Pengambilan (
     Tanggal DATE,
     Jam TIME,
     Status VARCHAR(50)
+);
+CREATE TABLE Petugas_Piket (
+    id_petugas INT PRIMARY KEY IDENTITY(1,1),
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nama_petugas VARCHAR(100) NOT NULL
 );
 INSERT INTO Pengambilan (NIS, Nama, Kelas, Tanggal, Jam, Status)
 VALUES ('12345', 'Budi', 'XI RPL', '2026-04-17', '12:30:00', 'Sudah Diambil');
@@ -53,7 +51,11 @@ VALUES
 ('2024005', 'Rizky Maulana', 'XII RPL 1', 'Tidak Alergi');
 
 select * from Siswa
-
+INSERT INTO Users (Username, Pass, RoleUser)
+VALUES 
+('admin', '123', 'Admin'),
+('petugas', '123', 'Petugas'),
+('siswa', '123', 'Siswa');
 SELECT 
     S.NIS,
     S.Nama,
@@ -76,3 +78,10 @@ ISNULL(P.StatusAmbil, 'Belum Ada') AS StatusAmbil
 FROM Siswa S
 LEFT JOIN Pengambilan P ON S.NIS = P.NIS
 WHERE S.NIS = '';
+
+CREATE TABLE Admin (
+    id_admin INT PRIMARY KEY IDENTITY(1,1),
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nama_admin VARCHAR(100) NOT NULL
+);

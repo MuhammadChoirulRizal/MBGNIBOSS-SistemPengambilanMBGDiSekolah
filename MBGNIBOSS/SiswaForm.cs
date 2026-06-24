@@ -2,13 +2,14 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace MBGNIBOSS
 {
     public partial class SiswaForm : Form
     {
         SqlConnection conn = new SqlConnection(
-        @"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;Integrated Security=True");
+@"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;User ID=sa;Password=123;TrustServerCertificate=True;");
 
         public SiswaForm()
         {
@@ -95,7 +96,9 @@ namespace MBGNIBOSS
             }
         }
 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
-
+        }
     }
 }

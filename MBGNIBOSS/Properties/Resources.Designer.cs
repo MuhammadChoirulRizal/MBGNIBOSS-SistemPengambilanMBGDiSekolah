@@ -83,6 +83,26 @@ namespace MBGNIBOSS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Gemini_Generated_Image_6rw86b6rw86b6rw8 {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_6rw86b6rw86b6rw8", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Gemini_Generated_Image_oidve6oidve6oidv {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_oidve6oidve6oidv", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap kawal_mbg_2 {
             get {
                 object obj = ResourceManager.GetObject("kawal-mbg-2", resourceCulture);

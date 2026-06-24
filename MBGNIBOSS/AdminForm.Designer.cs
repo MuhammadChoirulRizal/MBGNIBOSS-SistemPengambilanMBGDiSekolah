@@ -92,6 +92,8 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnRekapData = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -196,6 +198,10 @@
             // btnUpdate
             // 
             this.btnUpdate.BackColor = System.Drawing.Color.Orange;
+            this.btnUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUpdate.FlatAppearance.BorderSize = 0;
+            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUpdate.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnUpdate.Location = new System.Drawing.Point(427, 346);
             this.btnUpdate.Name = "btnUpdate";
@@ -208,6 +214,10 @@
             // btnHapus
             // 
             this.btnHapus.BackColor = System.Drawing.Color.Red;
+            this.btnHapus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHapus.FlatAppearance.BorderSize = 0;
+            this.btnHapus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHapus.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHapus.ForeColor = System.Drawing.Color.White;
             this.btnHapus.Location = new System.Drawing.Point(162, 341);
             this.btnHapus.Name = "btnHapus";
@@ -220,6 +230,10 @@
             // btnLoad
             // 
             this.btnLoad.BackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnLoad.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLoad.FlatAppearance.BorderSize = 0;
+            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoad.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLoad.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnLoad.Location = new System.Drawing.Point(300, 345);
             this.btnLoad.Name = "btnLoad";
@@ -241,7 +255,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(620, 234);
+            this.dataGridView1.Size = new System.Drawing.Size(641, 215);
             this.dataGridView1.TabIndex = 13;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
@@ -293,10 +307,13 @@
             // 
             // btnTambah
             // 
-            this.btnTambah.BackColor = System.Drawing.Color.Green;
+            this.btnTambah.BackColor = System.Drawing.Color.Blue;
+            this.btnTambah.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnTambah.FlatAppearance.BorderSize = 0;
             this.btnTambah.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTambah.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTambah.ForeColor = System.Drawing.Color.White;
-            this.btnTambah.Location = new System.Drawing.Point(24, 343);
+            this.btnTambah.Location = new System.Drawing.Point(14, 341);
             this.btnTambah.Name = "btnTambah";
             this.btnTambah.Size = new System.Drawing.Size(93, 48);
             this.btnTambah.TabIndex = 19;
@@ -340,11 +357,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(24, 397);
+            this.dataGridView2.Location = new System.Drawing.Point(10, 390);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(560, 209);
+            this.dataGridView2.Size = new System.Drawing.Size(614, 220);
             this.dataGridView2.TabIndex = 31;
             // 
             // button1
@@ -360,6 +377,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.Color.Transparent;
             this.groupBox1.Controls.Add(this.txtCariNIS);
             this.groupBox1.Controls.Add(this.cmbKelas);
             this.groupBox1.Controls.Add(this.button4);
@@ -379,9 +397,10 @@
             this.groupBox1.Controls.Add(this.btnUpdate);
             this.groupBox1.Controls.Add(this.dataGridView1);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(0, 52);
+            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.groupBox1.Location = new System.Drawing.Point(0, 59);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(641, 621);
+            this.groupBox1.Size = new System.Drawing.Size(641, 614);
             this.groupBox1.TabIndex = 33;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "data pengambilan";
@@ -403,12 +422,14 @@
             // 
             // button4
             // 
+            this.button4.BackColor = System.Drawing.Color.Wheat;
+            this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.button4.Location = new System.Drawing.Point(541, 347);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(94, 47);
             this.button4.TabIndex = 20;
             this.button4.Text = "RESET";
-            this.button4.UseVisualStyleBackColor = true;
+            this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // groupBox2
@@ -436,12 +457,13 @@
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.dtJamMulai);
             this.groupBox2.Controls.Add(this.dtJamSelesai);
-            this.groupBox2.Location = new System.Drawing.Point(680, 61);
+            this.groupBox2.Location = new System.Drawing.Point(680, 63);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(630, 612);
+            this.groupBox2.Size = new System.Drawing.Size(630, 610);
             this.groupBox2.TabIndex = 34;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Jadwal Pengambilan";
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
             // dtTanggal
             // 
@@ -761,12 +783,34 @@
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
             this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
+            // btnRekapData
+            // 
+            this.btnRekapData.Location = new System.Drawing.Point(1362, 421);
+            this.btnRekapData.Name = "btnRekapData";
+            this.btnRekapData.Size = new System.Drawing.Size(75, 48);
+            this.btnRekapData.TabIndex = 48;
+            this.btnRekapData.Text = "Rekap Data";
+            this.btnRekapData.UseVisualStyleBackColor = true;
+            this.btnRekapData.Click += new System.EventHandler(this.btnRekap_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(1360, 304);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 73);
+            this.button8.TabIndex = 51;
+            this.button8.Text = "Import";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // AdminForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1866, 712);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.btnRekapData);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -862,5 +906,7 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
+        private System.Windows.Forms.Button btnRekapData;
+        private System.Windows.Forms.Button button8;
     }
 }

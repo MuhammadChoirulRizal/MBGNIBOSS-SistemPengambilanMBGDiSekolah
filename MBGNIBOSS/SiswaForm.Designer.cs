@@ -43,7 +43,7 @@
             this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Navy;
-            this.label1.Location = new System.Drawing.Point(293, 9);
+            this.label1.Location = new System.Drawing.Point(620, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(235, 31);
             this.label1.TabIndex = 0;
@@ -66,7 +66,7 @@
             this.btnCek.BackColor = System.Drawing.Color.Aqua;
             this.btnCek.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCek.ForeColor = System.Drawing.Color.DarkBlue;
-            this.btnCek.Location = new System.Drawing.Point(63, 207);
+            this.btnCek.Location = new System.Drawing.Point(33, 207);
             this.btnCek.Name = "btnCek";
             this.btnCek.Size = new System.Drawing.Size(121, 47);
             this.btnCek.TabIndex = 4;
@@ -93,8 +93,9 @@
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(700, 220);
+            this.dataGridView1.Size = new System.Drawing.Size(1416, 460);
             this.dataGridView1.TabIndex = 6;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // button1
             // 
@@ -102,7 +103,7 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(583, 197);
+            this.button1.Location = new System.Drawing.Point(1305, 223);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(120, 40);
             this.button1.TabIndex = 7;
@@ -115,7 +116,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
-            this.ClientSize = new System.Drawing.Size(782, 521);
+            this.ClientSize = new System.Drawing.Size(1524, 755);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.txtNIS);
@@ -124,6 +125,7 @@
             this.Controls.Add(this.label1);
             this.Name = "SiswaForm";
             this.Text = "SiswaForm";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

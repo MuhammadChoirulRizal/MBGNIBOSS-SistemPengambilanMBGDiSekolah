@@ -1,15 +1,18 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using ExcelDataReader;
+using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
-
 namespace MBGNIBOSS
 {
     public partial class AdminForm : Form
     {
         SqlConnection conn = new SqlConnection(
-        @"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;Integrated Security=True");
+ @"Data Source=LAPTOP-5LMNPAS3\CHOY;Initial Catalog=DB_MBG;User ID=sa;Password=123;TrustServerCertificate=True;");
 
         BindingSource bs = new BindingSource();
         public AdminForm()
@@ -762,5 +765,103 @@ DataGridViewCellEventArgs e)
 
         }
 
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+        private void btnRekap_Click(object sender, EventArgs e)
+        {
+            RekapForm frm = new RekapForm();
+            frm.Show();
+            this.Hide();
+        }
+
+
+
+       
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog
+                { Filter = "Excel Workbook|*.xlsx" })
+                {
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string filePath = openFileDialog.FileName;
+                        using (var stream = File.Open(filePath,
+                            FileMode.Open,
+                            FileAccess.Read,
+                            FileShare.ReadWrite))
+                        {
+                            using (var reader =
+                                ExcelReaderFactory.CreateReader(stream))
+                            {
+                                var result = reader.AsDataSet(
+                                    new ExcelDataSetConfiguration()
+                                    {
+                                        ConfigureDataTable = (_) =>
+                                            new ExcelDataTableConfiguration()
+                                            {
+                                                UseHeaderRow = true
+                                            }
+                                    });
+
+                                DataTable dt = result.Tables[0];
+
+                                if (dt.Rows.Count == 0)
+                                {
+                                    MessageBox.Show("Data Excel kosong!");
+                                    return;
+                                }
+
+                                if (conn.State == ConnectionState.Open)
+                                    conn.Close();
+
+                                conn.Open();
+
+                                int sukses = 0;
+foreach (DataRow row in dt.Rows)
+{
+    string nis = row[0].ToString().Trim();
+    string nama = row[1].ToString().Trim();
+    string kelas = row[2].ToString().Trim();
+    string alergi = row[3].ToString().Trim();
+
+    if (string.IsNullOrEmpty(nis) ||
+        string.IsNullOrEmpty(nama))
+        continue;
+
+    SqlCommand cmd = new SqlCommand(
+        "spInsertPengambilan", conn);
+    cmd.CommandType = CommandType.StoredProcedure;
+    cmd.Parameters.AddWithValue("@NIS", nis);
+    cmd.Parameters.AddWithValue("@Nama", nama);
+    cmd.Parameters.AddWithValue("@Kelas", kelas);
+    cmd.Parameters.AddWithValue("@Alergi", alergi);
+    cmd.Parameters.AddWithValue("@Status", "Belum Diambil");
+
+    cmd.ExecuteNonQuery();
+    sukses++;
+}
+
+                                conn.Close();
+
+                                MessageBox.Show(sukses + " data berhasil diimport!");
+                                LoadData();
+                                LoadStatistik();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+        }
+        
     }
 }

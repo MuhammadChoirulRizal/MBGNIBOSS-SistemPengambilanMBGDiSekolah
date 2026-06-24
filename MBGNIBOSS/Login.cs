@@ -1,154 +1,120 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace MBGNIBOSS
 {
     public partial class Login : Form
     {
-        SqlConnection conn = new SqlConnection(
-        @"Data Source=LAPTOP-5LMNPAS3\CHOY;
-        Initial Catalog=DB_MBG;
-        Integrated Security=True;");
-
-        string role = "";
+        string role = ""; // global role
 
         public Login()
         {
             InitializeComponent();
         }
 
-        // ================= FORM LOAD =================
-        private void Login_Load(object sender, EventArgs e)
-        {
-            lblLogin.Visible = false;
-            txtPassword.Visible = false;
-            btnLogin.Visible = false;
-            
-        }
+        // =========================
+        // BUTTON ROLE
+        // =========================
 
-        // ================= ADMIN =================
+        private void btnPetugas_Click(object sender, EventArgs e)
+        {
+            role = "Petugas";
+            MessageBox.Show("Role dipilih: Petugas");
+        }
 
         private void btnAdmin_Click(object sender, EventArgs e)
         {
             role = "Admin";
-
-            lblLogin.Visible = true;
-            txtPassword.Visible = true;
-            btnLogin.Visible = true;
-
-            lblLogin.Text =
-            "Masukkan Password Admin";
-
-            txtPassword.Clear();
-            txtPassword.Focus();
+            MessageBox.Show("Role dipilih: Admin");
         }
 
-        // ================= PETUGAS =================
-        private void btnPetugas_Click(object sender, EventArgs e)
-        {
-            role = "Petugas";
-
-            lblLogin.Visible = true;
-            txtPassword.Visible = true;
-            btnLogin.Visible = true;
-
-            lblLogin.Text =
-            "Masukkan Password Petugas";
-
-            txtPassword.Clear();
-            txtPassword.Focus();
-        }
-
-        // ================= SISWA =================
         private void btnSiswa_Click(object sender, EventArgs e)
         {
-            SiswaForm f =
-            new SiswaForm();
+            role = "Siswa";
 
-            f.Show();
+            MessageBox.Show("Login Siswa berhasil");
+
+            SiswaForm ds = new SiswaForm();
+            ds.Show();
             this.Hide();
         }
 
-        // ================= LOGIN =================
+        // =========================
+        // BUTTON LOGIN
+        // =========================
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (txtPassword.Text.Trim() == "")
+            string password = txtPassword.Text.Trim();
+
+            if (role == "")
             {
-                MessageBox.Show(
-                "Password wajib diisi!");
+                MessageBox.Show("Pilih role dulu!");
                 return;
             }
 
-            try
+            // SISWA sudah auto login
+            if (role == "Siswa")
             {
-                if (conn.State ==
-                    System.Data.ConnectionState.Open)
-                    conn.Close();
-
-                conn.Open();
-
-                /*SqlCommand cmd =
-                new SqlCommand(
-                "SELECT * FROM Users " +
-                "WHERE RoleUser=@role " +
-                "AND Pass=@pass", conn);
-
-                cmd.Parameters.AddWithValue(
-                "@role", role);
-
-                cmd.Parameters.AddWithValue(
-                "@pass",
-                txtPassword.Text);*/
-                SqlCommand cmd =
-                new SqlCommand(
-                "SELECT * FROM Users " +
-                "WHERE RoleUser='" + role +
-                "' AND Pass='" + txtPassword.Text + "'",
-                conn);
-
-                SqlDataReader rd =
-                cmd.ExecuteReader();
-
-                if (rd.Read())
-                {
-                    rd.Close();
-                    conn.Close();
-
-                    if (role == "Admin")
-                    {
-                        AdminForm f =
-                        new AdminForm();
-
-                        f.Show();
-                        this.Hide();
-                    }
-                    else if
-                    (role == "Petugas")
-                    {
-                        PetugasForm f =
-                        new PetugasForm();
-
-                        f.Show();
-                        this.Hide();
-                    }
-                }
-                else
-                {
-                    rd.Close();
-                    conn.Close();
-
-                    MessageBox.Show(
-                    "Password salah!");
-                }
+                return;
             }
-            catch (Exception ex)
+
+            if (string.IsNullOrEmpty(password))
             {
-                conn.Close();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Password tidak boleh kosong!");
+                return;
+            }
+
+            if (role == "Admin" && password == "123")
+            {
+                MessageBox.Show("Login Admin berhasil");
+
+                AdminForm da = new AdminForm();
+                da.Show();
+                this.Hide();
+            }
+            else if (role == "Petugas" && password == "123")
+            {
+                MessageBox.Show("Login Petugas berhasil");
+
+                PetugasForm dp = new PetugasForm();
+                dp.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Password salah!");
             }
         }
+        private void RoundedButton(Button btn)
+        {
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            int radius = 20;
 
+            path.AddArc(0, 0, radius, radius, 180, 90);
+            path.AddArc(btn.Width - radius, 0, radius, radius, 270, 90);
+            path.AddArc(btn.Width - radius, btn.Height - radius, radius, radius, 0, 90);
+            path.AddArc(0, btn.Height - radius, radius, radius, 90, 90);
+
+            path.CloseFigure();
+            btn.Region = new Region(path);
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+            RoundedButton(btnLogin);
+            RoundedButton(btnAdmin);
+            RoundedButton(btnPetugas);
+            RoundedButton(btnSiswa);
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            HalamanUtama f = new HalamanUtama();
+            f.Show();
+            this.Hide();
+        }
     }
 }
